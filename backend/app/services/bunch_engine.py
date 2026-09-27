@@ -1,7 +1,7 @@
 """Bus bunching: planned headway vs actual arrival gaps."""
 from __future__ import annotations
 from dataclasses import asdict, dataclass
-from datetime import datetime
+from datetime import datetime, timedelta
 
 @dataclass
 class GapEvent:
@@ -19,6 +19,19 @@ def classify_gap(gap_min: float, planned_headway_min: float, bunch_threshold: fl
     if gap_min > large_threshold:
         return ("large_gap", f"间隔 {gap_min:.1f} 分钟超过大间隔阈值 {large_threshold}，建议前车减速或加发。")
     return ("normal", f"间隔接近计划 {planned_headway_min:.1f} 分钟，保持即可。")
+
+def apply_holds(arrivals: list[dict], holds: dict[tuple[str, str], float]) -> list[dict]:
+    """按登记的扣车分钟右移到站时刻,返回新列表(不改原数据)。
+
+    holds 以 (trip_no, stop_name) 为键;分钟为 0 或未登记时时刻不变。
+    """
+    adjusted: list[dict] = []
+    for a in arrivals:
+        minutes = holds.get((a["trip_no"], a["stop_name"])) or 0.0
+        if minutes:
+            a = {**a, "actual_arrive": a["actual_arrive"] + timedelta(minutes=minutes)}
+        adjusted.append(a)
+    return adjusted
 
 def detect_bunching(arrivals: list[dict], planned_headway_min: float, bunch_threshold: float, large_threshold: float) -> list[GapEvent]:
     by_stop: dict[str, list[dict]] = {}

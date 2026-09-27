@@ -29,11 +29,13 @@ function label(s: string) {
     <aside class="bg-trip-col">
       <h2>关联班次</h2>
       <div v-for="r in trips" :key="r.id ?? r.trip_no" class="bg-trip-row">
-        <div>
-          <div>{{ r.trip_no }}</div>
-          <div class="bg-trip-meta">{{ r.vehicle_no }}</div>
+        <div class="bg-trip-top">
+          <div>
+            <div>{{ r.trip_no }}</div>
+            <div class="bg-trip-meta">{{ r.vehicle_no }}</div>
+          </div>
+          <div class="bg-trip-meta">{{ r.planned_depart }}</div>
         </div>
-        <div class="bg-trip-meta">{{ r.planned_depart }}</div>
       </div>
     </aside>
     <div class="bg-strip-col">
