@@ -9,4 +9,5 @@ router = APIRouter(prefix="/lines", tags=["lines"])
 def list_lines(db: Session = Depends(get_db)):
     rows = db.scalars(select(Line).order_by(Line.id)).all()
     return [{"id": r.id, "code": r.code, "name": r.name, "planned_headway_min": r.planned_headway_min,
-             "bunch_threshold": r.bunch_threshold, "large_threshold": r.large_threshold} for r in rows]
+             "bunch_threshold": r.bunch_threshold, "large_threshold": r.large_threshold,
+             "max_hold_min": r.max_hold_min} for r in rows]

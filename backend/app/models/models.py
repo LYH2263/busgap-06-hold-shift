@@ -11,6 +11,7 @@ class Line(Base):
     planned_headway_min: Mapped[float] = mapped_column(Float, default=8.0)
     bunch_threshold: Mapped[float] = mapped_column(Float, default=3.0)
     large_threshold: Mapped[float] = mapped_column(Float, default=15.0)
+    max_hold_min: Mapped[float] = mapped_column(Float, default=5.0)
     trips: Mapped[list["Trip"]] = relationship(back_populates="line")
 
 class Trip(Base):
@@ -22,6 +23,7 @@ class Trip(Base):
     vehicle_no: Mapped[str] = mapped_column(String(32), default="")
     line: Mapped["Line"] = relationship(back_populates="trips")
     arrivals: Mapped[list["Arrival"]] = relationship(back_populates="trip")
+    hold: Mapped["Hold | None"] = relationship(back_populates="trip", uselist=False, cascade="all, delete-orphan")
 
 class Arrival(Base):
     __tablename__ = "arrivals"
@@ -31,6 +33,15 @@ class Arrival(Base):
     stop_seq: Mapped[int] = mapped_column(Integer)
     actual_arrive: Mapped[datetime] = mapped_column(DateTime)
     trip: Mapped["Trip"] = relationship(back_populates="arrivals")
+
+class Hold(Base):
+    """已排班次在某站登记的扣车分钟；只影响扣车站及其之后的有效到站时刻。"""
+    __tablename__ = "holds"
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    trip_id: Mapped[int] = mapped_column(ForeignKey("trips.id"), unique=True)
+    stop_name: Mapped[str] = mapped_column(String(64))
+    hold_min: Mapped[float] = mapped_column(Float)
+    trip: Mapped["Trip"] = relationship(back_populates="hold")
 
 class BunchReport(Base):
     __tablename__ = "bunch_reports"

@@ -181,3 +181,30 @@ th { color: var(--bg-dim); font-weight: 600; font-size: 0.78rem; }
   position: absolute; top: 8px; width: 10px; height: 32px;
   border-radius: 2px; transform: translateX(-50%);
 }
+
+.bg-hold-form {
+  grid-column: 1 / -1;
+  display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap;
+  margin-top: 0.45rem; padding-top: 0.45rem;
+  border-top: 1px dashed rgba(30,58,79,0.9);
+}
+.bg-hold-form select, .bg-hold-form input {
+  background: #0a1a26; color: var(--bg-text);
+  border: 1px solid var(--bg-edge); border-radius: 2px;
+  padding: 0.22rem 0.35rem; font-size: 0.78rem;
+}
+.bg-hold-form select { max-width: 120px; }
+.bg-hold-form input { width: 64px; }
+.btn-sm { padding: 0.22rem 0.6rem; font-size: 0.76rem; }
+.bg-hold-tag {
+  flex-basis: 100%;
+  font-size: 0.74rem; color: var(--bg-amber);
+}
+.bg-hold-err {
+  flex-basis: 100%;
+  font-size: 0.74rem; color: var(--bg-red);
+}
+.bg-bus-dot.bg-bus-held {
+  background: var(--bg-amber); box-shadow: 0 0 12px rgba(255,176,32,0.6);
+}
+.tl-mark.tl-held { background: var(--bg-amber) !important; }

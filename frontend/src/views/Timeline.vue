@@ -10,14 +10,16 @@ onMounted(async () => { data.value = await api('/reports/timeline?line_id=1') })
   <div class="card">
     <div class="tl-track">
       <div v-for="m in data.marks" :key="m.trip_no" class="tl-mark"
-        :style="{ left: m.pct + '%', background: m.pct < 15 ? 'var(--bg-red)' : 'var(--bg-cyan)' }"
-        :title="m.trip_no + ' ' + m.actual_arrive" />
+        :class="{ 'tl-held': m.held }"
+        :style="{ left: m.pct + '%', background: m.held ? undefined : (m.pct < 15 ? 'var(--bg-red)' : 'var(--bg-cyan)') }"
+        :title="m.trip_no + ' ' + m.actual_arrive + (m.held ? `（扣车 ${m.hold_min} 分）` : '')" />
     </div>
     <table>
-      <thead><tr><th>班次</th><th>到站时间</th><th>相对位置</th></tr></thead>
+      <thead><tr><th>班次</th><th>到站时间</th><th>相对位置</th><th>扣车</th></tr></thead>
       <tbody>
         <tr v-for="m in data.marks" :key="m.trip_no">
           <td>{{ m.trip_no }}</td><td>{{ m.actual_arrive }}</td><td>{{ m.pct }}%</td>
+          <td>{{ m.held ? m.hold_min + ' 分' : '—' }}</td>
         </tr>
       </tbody>
     </table>
